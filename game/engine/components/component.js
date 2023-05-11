@@ -5,6 +5,7 @@ class Component extends SceneObject {
     constructor() {
         super();
         
+        this.isEnabled = true;
         this.transform = null;
         this.entity = null;
     }

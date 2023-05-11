@@ -1,5 +1,5 @@
 import BehaviourComponent from "../engine/components/behaviourcomponent.js";
-import SpriteRenderer from "../renderers/spriteRenderer.js";
+import SpriteRenderer from "../engine/renderers/spriteRenderer.js";
 import Input from "../engine/input.js";
 import Time from "../engine/time.js";
 

@@ -7,9 +7,9 @@ import SinMoveBehaviour from "./behaviours/sinMoveBehaviour.js";
 import RotateBehaviour from "./behaviours/rotateBehaviour.js";
 
 // Test Renderers
-import CircleRenderer from "./renderers/circleRenderer.js";
-import RectangleRenderer from "./renderers/rectangleRenderer.js";
-import SpriteRenderer from "./renderers/spriteRenderer.js";
+import CircleRenderer from "./engine/renderers/circleRenderer.js";
+import RectangleRenderer from "./engine/renderers/rectangleRenderer.js";
+import SpriteRenderer from "./engine/renderers/spriteRenderer.js";
 import SimpleMoveInputBehaviour from "./behaviours/simpleMoveInputBehaviour.js";
 import FollowBehaviour from "./behaviours/followBehaviour.js";
 import PlayerController from "./behaviours/playerController.js";
@@ -23,10 +23,11 @@ class Game extends App {
     constructor(width, height) {
         super(width, height);
 
-        let cameraA = new Entity(Camera, SimpleMoveInputBehaviour);
-        let cameraComponent = cameraA.getComponent(Camera);
-        cameraComponent.clearColor = 'purple';
+        const cameraA = new Entity(Camera, SimpleMoveInputBehaviour);
+        const cameraComponent = cameraA.getComponent(Camera);
+
         cameraComponent.clearType = CameraClearType.GRADIENT;
+        cameraComponent.clearColor = 'white';
         cameraComponent.setClearGradientStops(Gradients.Evening);
 
         // let playerSprite = new Image();
@@ -75,33 +76,33 @@ class Game extends App {
         
 
         //Many Skellys =============================================================
-        let image = new Image();
-        image.src = 'game/content/BODY_skeleton.png';
+        // let image = new Image();
+        // image.src = 'game/content/BODY_skeleton.png';
 
-        image.onload = ()=> {
+        // image.onload = ()=> {
             
-            let min = -2500;
-            let max = 2500;
+        //     let min = -2500;
+        //     let max = 2500;
 
-            for (let i = 0; i < 5000; i++) {
-                let sprite = new Entity(CircleRenderer, SinMoveBehaviour);
+        //     for (let i = 0; i < 5000; i++) {
+        //         let sprite = new Entity(CircleRenderer, SinMoveBehaviour);
 
-                sprite.transform.position.x = min + Math.random() * (max - min);
-                sprite.transform.position.y = min + Math.random() * (max - min);
+        //         sprite.transform.position.x = min + Math.random() * (max - min);
+        //         sprite.transform.position.y = min + Math.random() * (max - min);
                 
-                sprite.transform.scale.x = 1;
-                sprite.transform.scale.y = 1;
+        //         sprite.transform.scale.x = 1;
+        //         sprite.transform.scale.y = 1;
 
-                let circleRenderer = sprite.getComponent(CircleRenderer);
-                circleRenderer.radius = 5 + Math.random() * 10;
-                circleRenderer.color = `hsl(${ Math.random() * 360 }, 75%, 50%)`;
+        //         let circleRenderer = sprite.getComponent(CircleRenderer);
+        //         circleRenderer.radius = 5 + Math.random() * 10;
+        //         circleRenderer.color = `hsl(${ Math.random() * 360 }, 75%, 50%)`;
 
-                let spriteSin = sprite.getComponent(SinMoveBehaviour);
-                spriteSin.speed = Math.random() * 2;
-                spriteSin.magnitudeX = 150;
-                spriteSin.magnitudeY = 150;
-            }
-        };
+        //         let spriteSin = sprite.getComponent(SinMoveBehaviour);
+        //         spriteSin.speed = Math.random() * 2;
+        //         spriteSin.magnitudeX = 150;
+        //         spriteSin.magnitudeY = 150;
+        //     }
+        // };
 
         // let rect = new Entity(RotateBehaviour, RectangleRenderer);
         // rect.transform.position.x = 500;

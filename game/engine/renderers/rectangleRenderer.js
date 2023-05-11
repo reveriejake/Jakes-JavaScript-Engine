@@ -1,4 +1,4 @@
-import RenderComponent from "../engine/components/renderComponent.js";
+import RenderComponent from "../components/renderComponent.js";
 
 class RectangleRenderer extends RenderComponent {
 

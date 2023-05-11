@@ -1,5 +1,5 @@
-import Bounds from "../engine/bounds.js";
-import RenderComponent from "../engine/components/renderComponent.js";
+import Bounds from "../bounds.js";
+import RenderComponent from "../components/renderComponent.js";
 
 class SpriteRenderer extends RenderComponent {
 
