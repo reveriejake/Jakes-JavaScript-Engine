@@ -16,7 +16,7 @@ class CircleRenderer extends RenderComponent {
 
         context.fillStyle = this.color;
         context.beginPath();
-        context.arc(this.bounds.xMin, this.bounds.yMin, this.#radius, 0, 360);
+        context.arc(0, 0, this.#radius, 0, 360);
         context.fill();
     }
 }

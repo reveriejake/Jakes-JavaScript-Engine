@@ -1,6 +1,6 @@
-import SceneObject from "../sceneobject.js";
+import SObject from "../sobject.js";
 
-class Component extends SceneObject { 
+class Component extends SObject { 
     
     constructor() {
         super();
@@ -10,5 +10,14 @@ class Component extends SceneObject {
         this.entity = null;
     }
 
+    getComponent(type) {
+
+        return this.entity.getComponent(type);
+    }
+
+    getComponents(type) { 
+        
+        return this.entity.getComponents(type);
+    }
 }
 export default Component;

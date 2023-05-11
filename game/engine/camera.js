@@ -1,17 +1,17 @@
-import Component from "./components/component.js"; 
 import Bounds from "./bounds.js";
-import Engine from "./engine.js";
-
-export const CameraClearType = {
-
-    NONE        : 0,
-    COLOR       : 1,
-    GRADIENT    : 2,
-    IMAGE       : 3
-}
+import Component from "./components/component.js"; 
 
 class Camera extends Component {
     
+    static ClearType = {
+
+        NONE        : 0,
+        COLOR       : 1,
+        GRADIENT    : 2,
+        IMAGE       : 3,
+        FADER       : 4,
+    }
+
     static #sceneCameras = [];
     static get SceneCameras() { return Camera.#sceneCameras; }
     static #activeCamera = null;
@@ -20,9 +20,10 @@ class Camera extends Component {
     constructor() {
         super();
         
-        this.clearType = CameraClearType.COLOR;
+        this.clearType = Camera.ClearType.COLOR;
         this.clearImage = null;
         this.clearColor = 'cornflowerblue';
+        this.clearFadeAlpha = 0.01;
         this.gradientStops = [[0, '#cdf9ff'], [1, '#75d5e3']];
         
         this.pixelWidth = 1920;
@@ -36,6 +37,8 @@ class Camera extends Component {
         this.bounds = new Bounds(-this.pixelWidth / 2, -this.pixelHeight / 2, this.pixelWidth, this.pixelHeight);
         this.viewBounds = new Bounds(this.bounds.xMin, this.bounds.yMin, this.bounds.width, this.bounds.height);
         
+        this.name = 'Camera';
+
         Camera.#sceneCameras.push(this);
         this.makeActive();
     }

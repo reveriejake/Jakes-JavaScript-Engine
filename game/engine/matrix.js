@@ -1,78 +1,33 @@
 
 class Matrix {
 
-    constructor() {
-        this.m = [
-            [1, 0, 0],
-            [0, 1, 0],
-            [0, 0, 1]
-        ];
-    }
-
-    translate(tx, ty) {
-
-        this.m[0][2] += tx;
-        this.m[1][2] += ty;
-    }
-
-    setPosition(x, y) {
+    static CreateRotationMatrix(theta) {
         
-        this.m[0][2] = x;
-        this.m[1][2] = y;
-    }
-
-    rotate(theta) {
-
         const cos = Math.cos(theta);
         const sin = Math.sin(theta);
 
-        const rotationMatrix = [
-            [cos, -sin, 0],
-            [sin, cos, 0],
-            [0, 0, 1]
+        return new Matrix(
+            cos, -sin, 0,
+            sin, cos, 0,
+            0, 0, 1
+        );
+    }
+
+    static RotatePoint(x, y, matrix) {
+
+        const rX = matrix.m[0][0] * x + matrix.m[0][1] * y + matrix.m[0][2];
+        const rY = matrix.m[1][0] * x + matrix.m[1][1] * y + matrix.m[1][2];
+
+        return { x: rX, y: rY };
+    }
+
+    constructor(m00 = 1, m01 = 0, m02 = 0, m10 = 0, m11 = 1, m12 = 0, m20 = 0, m21 = 0, m22 = 1) {
+
+        this.m = [
+            [m00, m01, m02],
+            [m10, m11, m12],
+            [m20, m21, m22]
         ];
-
-        this.multiply(rotationMatrix);
-    }
-
-    multiply(otherMatrix) {
-
-        const result = new Matrix();
-
-        for (let i = 0; i < 3; i++) {
-
-            for (let j = 0; j < 3; j++) {
-                
-                let sum = 0;
-                for (let k = 0; k < 3; k++) {
-
-                    sum += this.m[i][k] * otherMatrix.m[k][j];
-                }
-
-                result.m[i][j] = sum;
-            }
-        }
-
-        this.m = result.m;
-    }
-
-    transformPoint(x, y, z) {
-
-        const [x, y, z] = { x, y };
-
-        const [a, b, c] = this.m[0];
-        const [d, e, f] = this.m[1];
-        const [g, h, i] = this.m[2];
-
-        const tx = a * x + b * y + c * z;
-        const ty = d * x + e * y + f * z;
-        const tz = g * x + h * y + i * z;
-
-        return {
-            x: tx,
-            y: ty,
-            z: tz
-        };
     }
 }
 export default Matrix;

@@ -1,24 +1,34 @@
-import Behaviour from "./components/behaviourcomponent.js";
-import SceneObject from "./sceneobject.js";
+import SObject from "./sobject.js";
 import Transform from "./transform.js";
+import SceneGraph from "./scenegraph.js";
 
-class Entity extends SceneObject { 
+class Entity extends SObject { 
     
     #components = [];
 
     #transform;
     get transform() { return this.#transform; }
 
-    constructor(...components) {
+    constructor(name, ...components) {
         super();
 
+        this.name = name;
         this.#transform = this.addComponent(Transform);
+
         if(components) {
 
             for (let i = 0; i < components.length; i++) {
                 this.addComponent(components[i]);
             }
         }
+        
+        SceneGraph.AddEntity(this);
+    }
+
+    destroy() {
+        super.destroy();
+        
+        SceneGraph.RemoveEntity(this);
     }
 
     addComponent(type) {
@@ -41,7 +51,7 @@ class Entity extends SceneObject {
             return null;
     }
 
-    getAllComponents(type) {
+    getComponents(type) {
 
         let comps = this.#components.filter(item => item instanceof type);
         

@@ -15,106 +15,159 @@ import FollowBehaviour from "./behaviours/followBehaviour.js";
 import PlayerController from "./behaviours/playerController.js";
 
 import Camera from './engine/camera.js';
-import { CameraClearType } from "./engine/camera.js";
 import Gradients from "./engine/gradients.js";
+import Renderer from "./engine/renderer.js";
 
 class Game extends App {
 
     constructor(width, height) {
         super(width, height);
 
-        const cameraA = new Entity(Camera, SimpleMoveInputBehaviour);
-        const cameraComponent = cameraA.getComponent(Camera);
+        // Main Camera =============================================================
+        const cameraA = new Entity('Camera A', Camera, SimpleMoveInputBehaviour).getComponent(Camera);
+        cameraA.clearType = Camera.ClearType.GRADIENT;
+        cameraA.clearFadeAlpha = 0.1;
+        cameraA.setClearGradientStops(Gradients.Evening);
+        cameraA.clearColor = 'black';
 
-        cameraComponent.clearType = CameraClearType.GRADIENT;
-        cameraComponent.clearColor = 'white';
-        cameraComponent.setClearGradientStops(Gradients.Evening);
+        // Camera B ================================================================
+        // const cameraB = new Entity('Camera B', Camera, SimpleMoveInputBehaviour).getComponent(Camera);
+        // cameraB.viewOriginX = 0.5;
+        // cameraB.viewWidth = 0.5;
 
-        // let playerSprite = new Image();
+        // const camBMovement = cameraB.entity.getComponent(SimpleMoveInputBehaviour);
+
+        // Player ==================================================================
+        // const playerSprite = new Image();
         // playerSprite.src = 'game/content/red__0000_idle_1.png';
         // playerSprite.onload = () => {
 
-        //     let player = new Entity();
+        //     const player = new Entity('Player', SpriteRenderer, PlayerController, FollowBehaviour);
         //     player.transform.scale.x = 0.5;
         //     player.transform.scale.y = 0.5;
 
-        //     let playerSpriteRenderer = new SpriteRenderer(playerSprite, playerSprite.width, playerSprite.height);
+        //     const playerSpriteRenderer = player.getComponent(SpriteRenderer);// new SpriteRenderer(playerSprite, playerSprite.width, playerSprite.height);
+        //     playerSpriteRenderer.setSprite(playerSprite, playerSprite.width, playerSprite.height);
         //     playerSpriteRenderer.flipX = true;
         //     playerSpriteRenderer.sortOrder = 100;
-        //     player.addComponent(playerSpriteRenderer);
-        //     player.addComponent(new PlayerController(500, 'a', 'd', ' '));
-            
-        //     let followBehaviour = new FollowBehaviour(player.transform);
-        //     followBehaviour.offsetY = -300;
-        //     cameraA.addComponent(followBehaviour);
+
+        //     // Attach a follow script to our camera
+        //     const followBehaviour = cameraA.entity.addComponent(FollowBehaviour);
+        //     followBehaviour.target = player.transform;
+        //     followBehaviour.offsetY = -200;
         // };
         
-        // let cloudImg = new Image();
+        // Clouds ====================================================================
+        // const cloudImg = new Image();
         // cloudImg.src = 'game/content/testcloud.png';
+
         // cloudImg.onload = () => {
 
         //     for (let i = 0; i < 50; i++) {
 
-        //         let cloud = new Entity();
-        //         cloud.transform.position.x = -this.width * 2 + Math.random() * this.width * 3;
-        //         cloud.transform.position.y = -(this.height / 2) - 100 + Math.random() * 300;
+        //         const cloud = new Entity('Cloud', SpriteRenderer, SinMoveBehaviour);
+        //         cloud.transform.position.x = -2500 + Math.random() * 5000;
+        //         cloud.transform.position.y = -600 + Math.random() * 500;
                 
-        //         cloud.addComponent(new SpriteRenderer(cloudImg, cloudImg.width, cloudImg.height));
+        //         const spriteRenderer = cloud.getComponent(SpriteRenderer);
+        //         spriteRenderer.setSprite(cloudImg, cloudImg.width, cloudImg.height);
+        //         spriteRenderer.flipX = Math.random() > 0.5 ? true : false;
+
+        //         const sinMovement = cloud.getComponent(SinMoveBehaviour);
+        //         sinMovement.magnitudeY = 0;
+        //         sinMovement.speed = Math.random() * 0.5;
         //     }
         // };
-
-        // Camera B ================================================================
-        // const cameraB = new Entity();
-
-        // let camCompB = new Camera();        
-        // camCompB.viewOriginX = 0.501;
-        // camCompB.viewWidth = 0.499;
-        // cameraB.addComponent(camCompB);
-
-        // cameraB.addComponent(new CameraTestBehaviour());
-        // cameraB.addComponent(new SimpleMoveInputBehaviour(1000, 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'));
         
 
-        //Many Skellys =============================================================
-        // let image = new Image();
-        // image.src = 'game/content/BODY_skeleton.png';
+        // Many Circles =============================================================
+        const minCirlces = -2500;
+        const maxCircles = 2500;
 
-        // image.onload = ()=> {
+        for (let i = 0; i < 5000; i++) {
+            const sprite = new Entity('Circle', CircleRenderer, SinMoveBehaviour);
+
+            sprite.transform.position.x = minCirlces + Math.random() * (maxCircles - minCirlces);
+            sprite.transform.position.y = minCirlces + Math.random() * (maxCircles - minCirlces);
             
-        //     let min = -2500;
-        //     let max = 2500;
+            sprite.transform.scale.x = 1;
+            sprite.transform.scale.y = 1;
+
+            const circleRenderer = sprite.getComponent(CircleRenderer);
+            circleRenderer.radius = 5 + Math.random() * 10;
+            circleRenderer.color = `hsl(${ Math.random() * 360 }, 75%, 50%)`;
+
+            const spriteSin = sprite.getComponent(SinMoveBehaviour);
+            spriteSin.speed = Math.random() * 2;
+            spriteSin.magnitudeX = 150;
+            spriteSin.magnitudeY = 150;
+        }
+
+
+        // Many Skellys =============================================================
+        // const skellyImg = new Image();
+        // skellyImg.src = 'game/content/BODY_skeleton.png';
+
+        // skellyImg.onload = ()=> {
+            
+        //     const minSkelly = -2500;
+        //     const maxSkelly = 2500;
 
         //     for (let i = 0; i < 5000; i++) {
-        //         let sprite = new Entity(CircleRenderer, SinMoveBehaviour);
+        //         const sprite = new Entity('Skelly', SpriteRenderer, RotateBehaviour);
 
-        //         sprite.transform.position.x = min + Math.random() * (max - min);
-        //         sprite.transform.position.y = min + Math.random() * (max - min);
+        //         sprite.transform.position.x = minSkelly + Math.random() * (maxSkelly - minSkelly);
+        //         sprite.transform.position.y = minSkelly + Math.random() * (maxSkelly - minSkelly);
                 
-        //         sprite.transform.scale.x = 1;
-        //         sprite.transform.scale.y = 1;
+        //         const randScale = 1 + Math.random();
+        //         sprite.transform.scale.x = randScale;
+        //         sprite.transform.scale.y = randScale;
 
-        //         let circleRenderer = sprite.getComponent(CircleRenderer);
-        //         circleRenderer.radius = 5 + Math.random() * 10;
-        //         circleRenderer.color = `hsl(${ Math.random() * 360 }, 75%, 50%)`;
+        //         const spriteRenderer = sprite.getComponent(SpriteRenderer);
+        //         spriteRenderer.setSprite(skellyImg, 64, 64);
 
-        //         let spriteSin = sprite.getComponent(SinMoveBehaviour);
-        //         spriteSin.speed = Math.random() * 2;
-        //         spriteSin.magnitudeX = 150;
-        //         spriteSin.magnitudeY = 150;
+        //         const spriteSin = sprite.getComponent(RotateBehaviour);
+        //         spriteSin.speed = -10 + Math.random() * 20;
         //     }
         // };
 
-        // let rect = new Entity(RotateBehaviour, RectangleRenderer);
-        // rect.transform.position.x = 500;
 
-        // let rectRenderer = rect.getComponent(RectangleRenderer);
-        // rectRenderer.sortOrder = -100;
+        // Crate ========================================================================
+        const crateImg = new Image();
+        crateImg.src = 'game/content/crate1_diffuse.png';
+
+        crateImg.onload = () =>{
+
+            const crate = new Entity('Crate', SpriteRenderer, SinMoveBehaviour, RotateBehaviour).getComponent(SpriteRenderer);
+            crate.setSprite(crateImg, crateImg.width, crateImg.height);
+            crate.transform.scale.x = 0.5;
+            crate.transform.scale.y = 0.5;
+            crate.sortOrder = 0;
+        }
+        
+        
+        // Rectangle Spinner ============================================================
+        // const rect = new Entity('Rectangle', RotateBehaviour, RectangleRenderer);
+        // rect.transform.position.x = 0;
+
+        // const rectRenderer = rect.getComponent(RectangleRenderer);
+        // rectRenderer.color = 'purple';
+        // rectRenderer.sortOrder = 150;
         // rectRenderer.width = 300;
 
-        // let rectRenderer = new RectangleRenderer(200, 200);
-        // let rectRotator = new RotateBehaviour(1);
-        //rect.addComponent(RectangleRenderer);
-        //rect.addComponent([RotateBehaviour, RectangleRenderer]);
+        // const rectRotator = rect.getComponent(RotateBehaviour);
+        // rectRotator.speed = 2;
+
+        // const sinMovement = rect.addComponent(SinMoveBehaviour);
+        // sinMovement.magnitudeX = 750;
+        // sinMovement.magnitudeY = 200;
+        // sinMovement.speed = 1;
+
+
+        // Scene Management Test ==========================================================
+        //SceneGraph.ExportScene('test.json');
+
+        //Renderer.showRenderBounds = true;
     }
 }
 

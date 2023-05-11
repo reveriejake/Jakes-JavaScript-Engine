@@ -5,7 +5,7 @@ import Time from "../engine/time.js";
 
 class PlayerController extends BehaviourComponent {
 
-    speed = 1;
+    speed = 500;
 
     velX = 0;
     velY = 0;
