@@ -13,27 +13,29 @@ class RenderComponent extends Component {
     get isVisible() { return this.#isVisible; }
     set isVisible(v) { this.#isVisible = v; }
 
+    #renderBounds;
+    get renderBounds() { return this.#renderBounds; }
+
     constructor() {
         super();
 
-        Renderer.AddRenderer(this);
+        this.#sortOrder = 0;
+        this.#isVisible = true;        
+        this.#renderBounds = new Bounds(-5, -5, 10, 10);
 
-        this.sortOrder = 0;
-        this.isVisible = true;
-        this.bounds = new Bounds(-5, -5, 10, 10);
+        Renderer.AddRenderer(this);
+        Renderer.SortRenderers();
     }
 
     render(context) { }
     
     getAABB() {
 
-        const rotMatrix = Matrix.CreateRotationMatrix(this.transform.rotation);
-
         const points = [
-            Matrix.RotatePoint(this.bounds.xMin * this.transform.scale.x, this.bounds.yMin * this.transform.scale.y, rotMatrix),
-            Matrix.RotatePoint(this.bounds.xMax * this.transform.scale.x, this.bounds.yMax * this.transform.scale.y, rotMatrix),
-            Matrix.RotatePoint(this.bounds.xMin * this.transform.scale.x, this.bounds.yMax * this.transform.scale.y, rotMatrix),
-            Matrix.RotatePoint(this.bounds.xMax * this.transform.scale.x, this.bounds.yMin * this.transform.scale.y, rotMatrix)
+            this.transform.localToWorldMatrix.multiplyPoint(this.#renderBounds.xMin, this.#renderBounds.yMin),
+            this.transform.localToWorldMatrix.multiplyPoint(this.#renderBounds.xMax, this.#renderBounds.yMax),
+            this.transform.localToWorldMatrix.multiplyPoint(this.#renderBounds.xMin, this.#renderBounds.yMax),
+            this.transform.localToWorldMatrix.multiplyPoint(this.#renderBounds.xMax, this.#renderBounds.yMin),
         ]
 
         const min = { x: Infinity, y: Infinity }
@@ -47,9 +49,7 @@ class RenderComponent extends Component {
             max.y = Math.max(max.y, points[i].y);
         }
 
-        const bnds = new Bounds(this.transform.position.x + min.x, this.transform.position.y + min.y, max.x - min.x, max.y - min.y);
-
-        return bnds;
+        return new Bounds(this.transform.pX + min.x, this.transform.pY + min.y, max.x - min.x, max.y - min.y);
     }
 
     destroy() {

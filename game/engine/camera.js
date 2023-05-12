@@ -53,11 +53,14 @@ class Camera extends Component {
         
         Camera.#activeCamera = this;
     }
+
+    updateViewBounds() {
+
+        this.viewBounds.set(this.transform.pX + this.bounds.xMin, this.transform.pY + this.bounds.yMin, this.bounds.width, this.bounds.height);
+    }
     
     testAABB(bounds) {
-        
-        this.viewBounds.set(this.transform.position.x + this.bounds.xMin, this.transform.position.y + this.bounds.yMin, this.bounds.width, this.bounds.height);
-        
+                
         return (
             bounds.xMax > this.viewBounds.xMin &&
             bounds.yMax > this.viewBounds.yMin &&

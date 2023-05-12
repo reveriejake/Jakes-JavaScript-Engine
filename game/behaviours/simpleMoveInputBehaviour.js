@@ -39,8 +39,8 @@ class SimpleMoveInputBehaviour extends BehaviourComponent {
         this.velX *= 0.9;
         this.velY *= 0.9;
 
-        this.transform.position.x += this.velX * Time.deltaTime;
-        this.transform.position.y += this.velY * Time.deltaTime;
+        this.transform.pX += this.velX * Time.deltaTime;
+        this.transform.pY += this.velY * Time.deltaTime;
 
         if(Input.IsKey('q')) {
 

@@ -1,69 +1,49 @@
 import Component from "./components/component.js";
 import Matrix from "./matrix.js";
 
-class Vector2Callback {
-
-    #x = 0;
-    get x() { return this.#x; }
-    set x(_x) { this.#x = _x; this.#changeCallback(); }
-
-    #y = 0;
-    get y() { return this.#y; }
-    set y(_y) { this.#y = _y; this.#changeCallback(); }
-
-    #changeCallback
-    constructor(_x, _y, changeCallback) { 
-
-        this.#changeCallback = changeCallback;
-        this.#x = _x;
-        this.#y = _y;
-    }
-}
-
 class Transform extends Component {
+
+    #pX = 0;
+    #pY = 0;
+    #sX = 1;
+    #sY = 1;
+    #r = 0;
+    #wMatrixDirty = false;
+
+    get pX() { return this.#pX; }
+    set pX(x) { this.#pX = x; this.#wMatrixDirty = true; }
     
-    #position = new Vector2Callback(0, 0, this.#onTransformChanged );
-    get position() { return this.#position; }
-    set position(v) { this.#position = v; this.#onTransformChanged(); }
+    get pY() { return this.#pY; }
+    set pY(y) { this.#pY = y; this.#wMatrixDirty = true;  }
 
-    #scale = new Vector2Callback(1, 1, this.#onTransformChanged);
-    get scale() { return this.#scale; }
-    set scale(v) { this.#scale = v; this.#onTransformChanged(); }
+    get sX() { return this.#sX; }
+    set sX(x) { this.#sX = x; this.#wMatrixDirty = true;  }
+    
+    get sY() { return this.#sY; }
+    set sY(y) { this.#sY = y; this.#wMatrixDirty = true;  }
 
-    #rotation = 0;
-    get rotation() { return this.#rotation; }
-    set rotation(v) { this.#rotation = v; this.#onTransformChanged(); }
+    get r() { return this.#r; }
+    set r(r) { this.#r = r; this.#wMatrixDirty = true;  }
 
-    constructor() {
-        super(); 
-
-        this.localMatrix = new Matrix();
+    #localToWorldMatrix = new Matrix();
+    get localToWorldMatrix() { 
+      
+      if(this.#wMatrixDirty) { 
+    
+        this.#updateWorldMatrix(); 
+        this.#wMatrixDirty = false;
+      }
+      
+      return this.#localToWorldMatrix; 
     }
 
-    #onTransformChanged() {
+    #updateWorldMatrix() {
 
-        //this.localMatrix.rotate(this.rotation);
+      const tMatrix = Matrix.CreateTranslationMatrix(this.#pX, this.#pY);
+      const sMatrix = Matrix.CreateScaleMatrix(this.#sX, this.#sY);
+      const rMatrix = Matrix.CreateRotationMatrix(this.#r);
+
+      this.#localToWorldMatrix = Matrix.Multiply(Matrix.Multiply(sMatrix, rMatrix), tMatrix); // Matrix.Multiply(Matrix.Multiply(rMatrix, sMatrix), tMatrix);
     }
-
-    // addChild(child) {
-
-    //     if(child.parent) {
-    //         child.parent.removeChild(child);
-    //     }
-
-    //     child.parent = this;
-    //     this.#children.push(child);
-    // }
-
-    // removeChild(child) {
-        
-    //     const index = this.#children.indexOf(child);
-
-    //     if(index !== -1) {
-
-    //         child.parent = null;
-    //         this.#children.splice(index, 1);
-    //     }
-    // }
-}
+  }
 export default Transform;

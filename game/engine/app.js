@@ -8,19 +8,19 @@ class App {
         this.height = height;
     }
 
-    static Gameloop() {
+    #gameloop = () => {
 
         Engine.Update();
         Engine.Render();
 
-        window.requestAnimationFrame(App.Gameloop);
+        window.requestAnimationFrame(this.#gameloop);
     }
 
     run() {
 
         Engine.Initialize(this, this.width, this.height);
         this.loadContent();
-        window.requestAnimationFrame(App.Gameloop);
+        this.#gameloop();
     }
 
     loadContent() {}

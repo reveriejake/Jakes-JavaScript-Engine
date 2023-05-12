@@ -11,6 +11,16 @@ class Component extends SObject {
         this.entity = null;
     }
 
+    addComponent(type) {
+
+        return this.entity.addComponent(type);
+    }
+
+    removeComponent(type) { 
+
+        this.entity.removeComponent(type);
+    }
+
     getComponent(type) {
 
         return this.entity.getComponent(type);

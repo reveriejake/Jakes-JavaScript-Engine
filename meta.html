@@ -14,63 +14,183 @@
     <script>
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
-      const balls = [];
 
-      class Ball {
-        constructor(x, y, r) {
-          this.x = x;
-          this.y = y;
-          this.r = r;
-        }
 
-        draw() {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
+      class Vec2CB {
 
-        update() {
-          this.x += Math.random() * 4 - 2;
-          this.y += Math.random() * 4 - 2;
+        #x = 0;
+        #y = 0;
+        #cb = null;
+
+        get x() { return this.#x; }
+        set x(v) { this.#x = v; this.#cb(); }
+
+        get y() { return this.#x; }
+        set y(v) { this.#x = v; this.#cb(); }
+
+        constructor(x, y, cb) {
+          this.#x = x;
+          this.#y = y;
+          this.#cb = cb;
         }
       }
 
-      function render() {
+      class Transform {
+
+        #pX = 0;
+        #pY = 0;
+        #sX = 1;
+        #sY = 1;
+        #r = 0;
+        #wMatrixDirty = false;
+
+        get pX() { return this.#pX; }
+        set pX(x) { this.#pX = x; this.#wMatrixDirty = true; }
+        
+        get pY() { return this.#pY; }
+        set pY(y) { this.#pY = y; this.#wMatrixDirty = true;  }
+
+        get sX() { return this.#sX; }
+        set sX(x) { this.#sX = x; this.#wMatrixDirty = true;  }
+        
+        get sY() { return this.#sY; }
+        set sY(y) { this.#sY = y; this.#wMatrixDirty = true;  }
+
+        get r() { return this.#r; }
+        set r(r) { this.#r = r; this.#wMatrixDirty = true;  }
+
+        #localToWorldMatrix = new Matrix();
+        get localToWorldMatrix() { 
+          
+          if(this.#wMatrixDirty) { 
+        
+            this.#updateWorldMatrix(); 
+          }
+          
+          return this.#localToWorldMatrix; 
+        }
+
+        #updateWorldMatrix() {
+
+          const tMatrix = Matrix.CreateTranslationMatrix(this.#pX, this.#pY);
+          const sMatrix = Matrix.CreateScaleMatrix(this.#sX, this.#sY);
+          const rMatrix = Matrix.CreateRotationMatrix(this.#r);
+
+          this.#localToWorldMatrix = Matrix.Multiply(Matrix.Multiply(rMatrix, sMatrix), tMatrix);
+        }
+      }
+
+      class Matrix {
+
+        constructor(m00 = 1, m01 = 0, m02 = 0, m10 = 0, m11 = 1, m12 = 0, m20 = 0, m21 = 0, m22 = 1) {
+
+          this.m=[
+            [m00, m01, m02],
+            [m10, m11, m12],
+            [m20, m21, m22]
+          ]
+        }
+
+        rotate(theta) {
+          const rotation = Matrix.Multiply(this, Matrix.CreateRotationMatrix(theta));
+        }
+
+        multiply(matrix) {
+
+          this.m[0][0] = matrix.m[0][0] * this.m[0][0] + matrix.m[0][1] * this.m[1][0] + matrix.m[0][2] * this.m[2][0];
+          this.m[0][1] = matrix.m[0][0] * this.m[0][1] + matrix.m[0][1] * this.m[1][1] + matrix.m[0][2] * this.m[2][1];
+          this.m[0][2] = matrix.m[0][0] * this.m[0][2] + matrix.m[0][1] * this.m[1][2] + matrix.m[0][2] * this.m[2][2];          
+          this.m[1][0] = matrix.m[1][0] * this.m[0][0] + matrix.m[1][1] * this.m[1][0] + matrix.m[1][2] * this.m[2][0];
+          this.m[1][1] = matrix.m[1][0] * this.m[0][1] + matrix.m[1][1] * this.m[1][1] + matrix.m[1][2] * this.m[2][1];
+          this.m[1][2] = matrix.m[1][0] * this.m[0][2] + matrix.m[1][1] * this.m[1][2] + matrix.m[1][2] * this.m[2][2];          
+          this.m[2][0] = matrix.m[2][0] * this.m[0][0] + matrix.m[2][1] * this.m[1][0] + matrix.m[2][2] * this.m[2][0];
+          this.m[2][1] = matrix.m[2][0] * this.m[0][1] + matrix.m[2][1] * this.m[1][1] + matrix.m[2][2] * this.m[2][1];
+          this.m[2][2] = matrix.m[2][0] * this.m[0][2] + matrix.m[2][1] * this.m[1][2] + matrix.m[2][2] * this.m[2][2];
+        }
+
+        static CreateRotationMatrix(theta) { 
+          
+          const cos = Math.cos(theta);
+          const sin = Math.sin(theta);
+
+          return new Matrix(cos, sin, 0, -sin, cos, 0, 0, 0, 1);
+        }
+
+        static CreateTranslationMatrix(tx, ty) { 
+
+          return new Matrix(1, 0, 0, 0, 1, 0, tx, ty, 1);
+        }
+
+        static CreateScaleMatrix(sx, sy) { 
+          
+          return new Matrix(sx, 0, 0, 0, sy, 0, 0, 0, 1);
+        }
+
+        static Multiply(matA, matB) {
+
+          const matrix = new Matrix();
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+
+                let sum = 0;
+                for (let k = 0; k < 3; k++) {
+                    
+                    sum += matA.m[i][k] * matB.m[k][j];
+                }
+                matrix.m[i][j] = sum;
+                
+              }
+          }
+
+          return matrix;
+        }
+      }
+
+      class Square {
+
+        constructor() {
+
+          this.transform = new Transform();
+        }
+
+        draw(context) {
+          
+          context.save();
+          //context.transform(this.transform.worldMatrix.m[0][0], this.transform.worldMatrix.m[1][0], this.transform.worldMatrix.m[0][1], this.transform.worldMatrix.m[1][1], this.transform.worldMatrix.m[2][0], this.transform.worldMatrix.m[2][1]);
+
+          context.translate(this.transform.pX, this.transform.pY);
+          context.scale(this.transform.sX, this.transform.sY);
+          context.rotate(this.transform.r);
+
+          context.fillStyle = 'black';
+          context.fillRect(-50, -50, 100, 100);
+          
+          context.restore();
+
+        }
+      }
+      
+
+      let square = new Square();
+
+      function render(context) {
+
+        square.transform.pX = (canvas.width / 2) + Math.sin(Date.now() * 0.001) * (canvas.width / 4);
+        square.transform.pY = (canvas.height / 2) + Math.cos(Date.now() * 0.001) * (canvas.width / 4);
+        square.transform.r -= 0.02;
+        square.draw(context);
+
+      }
+      
+      function gameloop() {
+        
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (let i = 0; i < balls.length; i++) {
-          balls[i].update();
-          balls[i].draw();
-        }
-
-        for (let i = 0; i < balls.length; i++) {
-          for (let j = i + 1; j < balls.length; j++) {
-            const dx = balls[i].x - balls[j].x;
-            const dy = balls[i].y - balls[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const sumR = balls[i].r + balls[j].r;
-
-            if (dist < sumR) {
-              ctx.beginPath();
-              ctx.moveTo(balls[i].x, balls[i].y);
-              ctx.lineTo(balls[j].x, balls[j].y);
-              ctx.stroke();
-            }
-          }
-        }
-
-        requestAnimationFrame(render);
+        render(ctx);
+        requestAnimationFrame(gameloop);
       }
+      requestAnimationFrame(gameloop);
 
-      for (let i = 0; i < 20; i++) {
-        balls.push(new Ball(
-          Math.random() * canvas.width,
-          Math.random() * canvas.height,
-          Math.random() * 20 + 10
-        ));
-      }
-
-      requestAnimationFrame(render);
     </script>
   </body>
 </html>

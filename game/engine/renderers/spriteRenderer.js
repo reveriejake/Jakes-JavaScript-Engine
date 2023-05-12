@@ -1,4 +1,3 @@
-import Bounds from "../bounds.js";
 import RenderComponent from "../components/renderComponent.js";
 
 class SpriteRenderer extends RenderComponent {
@@ -11,18 +10,22 @@ class SpriteRenderer extends RenderComponent {
         this.#image = null;        
         this.alpha = 1;
 
-        this.flipX = false;
-        
         this.anchorX = 0.5;
         this.anchorY = 0.5;
+
+        this.frameX = 0;
+        this.frameY = 0;
+
+        this.flipX = false;
+        this.flipY = false;
         
-        this.bounds.set(0, 0, 100, 100);
+        this.renderBounds.set(-50, -50, 100, 100);
     }
 
     setSprite(image, srcWidth, srcHeight) {
 
         this.#image = image;
-        this.bounds.set(-srcWidth / 2, -srcHeight / 2, srcWidth, srcHeight);
+        this.renderBounds.set(-srcWidth / 2, -srcHeight / 2, srcWidth, srcHeight);
     }
 
     render(context) {
@@ -31,8 +34,18 @@ class SpriteRenderer extends RenderComponent {
             context.globalAlpha = this.alpha;
 
             context.save();
-            context.scale(this.flipX ? -1 : 1, 1);
-            context.drawImage(this.#image, 0, 0, this.bounds.width, this.bounds.height, -this.bounds.width * this.anchorX, -this.bounds.height * this.anchorY, this.bounds.width, this.bounds.height);
+            context.scale(this.flipX ? -1 : 1, this.flipY ? -1 : 1);
+            context.drawImage(
+                this.#image, 
+                this.frameX * this.renderBounds.width, 
+                this.frameY * this.renderBounds.height, 
+                this.renderBounds.width, 
+                this.renderBounds.height, 
+                -this.renderBounds.width * this.anchorX, 
+                -this.renderBounds.height * this.anchorY, 
+                this.renderBounds.width, 
+                this.renderBounds.height
+            );
             context.restore();
 
             context.globalAlpha = 1;

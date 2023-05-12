@@ -9,14 +9,14 @@ class SinMoveBehaviour extends BehaviourComponent {
 
     awake() {
         
-        this.initPosX = this.transform.position.x;
-        this.initPosY = this.transform.position.y;
+        this.initPosX = this.transform.pX;
+        this.initPosY = this.transform.pY;
     }
 
     update() {
 
-        this.transform.position.x = this.initPosX + Math.sin(Time.time * this.speed) * this.magnitudeX;
-        this.transform.position.y = this.initPosY + Math.cos(Time.time * this.speed) * this.magnitudeY;
+        this.transform.pX = this.initPosX + Math.sin(Time.time * this.speed) * this.magnitudeX;
+        this.transform.pY = this.initPosY + Math.cos(Time.time * this.speed) * this.magnitudeY;
     }
 }
 export default SinMoveBehaviour;

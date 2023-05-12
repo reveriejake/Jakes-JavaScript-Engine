@@ -30,7 +30,7 @@ class Engine {
     }
     
     static Update() {
-        
+
         Time.Update();
         
         BehaviourComponent.Awake();
@@ -53,7 +53,7 @@ class Engine {
             this.Context.fillText(noCamText, this.Canvas.width / 2 + (-this.Context.measureText(noCamText).width / 2), this.Canvas.height / 2 );
 
         } else {
-
+            
             Camera.SceneCameras.forEach(camera => {
 
                 if(camera.isEnabled) {
@@ -61,14 +61,19 @@ class Engine {
                 }
             });
             
+            this.Context.font = 'bold 20px Consolas';
+            this.Context.fillStyle = 'white';
+            this.Context.textAlign = 'left';
+
+            this.Context.fillText(`Render : ${ Renderer.renderedEntitiesCount } / ${ Renderer.renderersCount }`, 35, 35);
+
             this.Context.globalAlpha = 0.75;
             this.Context.fillStyle = 'white';
             this.Context.fillRect(this.Canvas.width - 160, 10, 150, 35);
             this.Context.globalAlpha = 1;
             
-            this.Context.font = 'bold 20px Consolas';
-            this.Context.fillStyle = 'black';
             this.Context.textAlign = 'right';
+            this.Context.fillStyle = 'black';
             this.Context.fillText(`FPS : ${ Time.fps }`, this.Canvas.width - 35, 35);
         }
     }

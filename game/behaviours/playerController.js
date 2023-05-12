@@ -19,6 +19,7 @@ class PlayerController extends BehaviourComponent {
     awake() {
 
         this.sprite = this.entity.getComponent(SpriteRenderer);
+        this.initScale = this.transform.sX;
     }
 
     update() {
@@ -43,12 +44,12 @@ class PlayerController extends BehaviourComponent {
         this.velX *= 0.9;
         this.velY += 10;
 
-        this.transform.position.x += this.velX * Time.deltaTime;
-        this.transform.position.y += this.velY * Time.deltaTime;
+        this.transform.pX += this.velX * Time.deltaTime;
+        this.transform.pY += this.velY * Time.deltaTime;
 
-        if(this.transform.position.y > 100) {
+        if(this.transform.pY > 100) {
 
-            this.transform.position.y = 100;
+            this.transform.pY = 100;
             this.velY = 0;
             this.isGrounded = true;
 

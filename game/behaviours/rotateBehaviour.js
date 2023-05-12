@@ -7,12 +7,12 @@ class RotateBehaviour extends BehaviourComponent {
 
     awake() {
 
-        this.transform.rotation = Math.random() * Math.PI * 2;
+        this.transform.r = Math.random() * Math.PI * 2;
     }
 
     update() {
 
-        this.transform.rotation += this.speed * Time.deltaTime;
+        this.transform.r += this.speed * Time.deltaTime;
     }
 }
 export default RotateBehaviour;

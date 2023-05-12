@@ -1,3 +1,4 @@
+
 class Renderer {
 
     static #showRenderBounds = false;
@@ -5,6 +6,7 @@ class Renderer {
 
     static #renderedEntitiesCount = 0;
     static get renderedEntitiesCount() { return this.#renderedEntitiesCount; }
+    static get renderersCount() { return this.#Renderers.length; }
 
     static #Renderers = [];
     static AddRenderer(renderer) {
@@ -34,6 +36,8 @@ class Renderer {
     static Render(camera, context) {
 
         camera.makeActive();
+        camera.updateViewBounds(); 
+
         context.save();
 
         if(camera.viewWidth < 1 || camera.viewHeight < 1 || camera.viewOriginX > 0 || camera.viewOriginY > 0) {
@@ -75,6 +79,7 @@ class Renderer {
             case 3: /*IMAGE*/ {
                 
                 context.clearRect(camera.pixelWidth * camera.viewOriginX, camera.pixelHeight * camera.viewOriginY, camera.pixelWidth * camera.viewWidth, camera.pixelHeight * camera.viewHeight);
+                context.drawImage(camera.clearImage, 0, 0, camera.pixelWidth * camera.viewWidth, camera.pixelHeight * camera.viewHeight);
             }
             break;
 
@@ -89,12 +94,11 @@ class Renderer {
         }
 
         // Move camera to camera origin
-        context.translate(-camera.transform.position.x + camera.pixelWidth / 2, -camera.transform.position.y + camera.pixelHeight / 2);
+        context.translate(-camera.transform.pX + (camera.viewOriginX * camera.pixelWidth) + (camera.viewWidth * camera.pixelWidth) / 2, -camera.transform.pY + (camera.viewOriginY * camera.pixelHeight)+ (camera.viewHeight * camera.pixelHeight) / 2);
 
-        let renderers = Renderer.GetRenderersInView(camera.viewBounds);
-        //renderers.sort((a,b) => { return (a.sortOrder > b.sortOrder) ? 1 : -1; });
-
+        const renderers = Renderer.GetRenderersInView(camera.viewBounds);
         this.#renderedEntitiesCount = 0;
+
         renderers.forEach(renderer => {
 
             const aabb = renderer.getAABB();
@@ -103,19 +107,16 @@ class Renderer {
             if(renderer.isVisible) {
                 
                 context.save();
-                
-                context.translate(renderer.transform.position.x, renderer.transform.position.y);
-                context.rotate(renderer.transform.rotation);
-                context.scale(renderer.transform.scale.x, renderer.transform.scale.y);
-                
-                // context.transform(
-                //     renderer.transform.localMatrix.m[0][0],
-                //     renderer.transform.localMatrix.m[1][0],
-                //     renderer.transform.localMatrix.m[0][1],
-                //     renderer.transform.localMatrix.m[1][1],
-                //     renderer.transform.localMatrix.m[0][2],
-                //     renderer.transform.localMatrix.m[1][2]);
 
+                context.transform(
+                    renderer.transform.localToWorldMatrix.m[0][0], 
+                    renderer.transform.localToWorldMatrix.m[1][0], 
+                    renderer.transform.localToWorldMatrix.m[0][1], 
+                    renderer.transform.localToWorldMatrix.m[1][1], 
+                    renderer.transform.localToWorldMatrix.m[2][0],
+                    renderer.transform.localToWorldMatrix.m[2][1]
+                );
+                
                 renderer.render(context);
                 
                 this.#renderedEntitiesCount++;
@@ -130,27 +131,6 @@ class Renderer {
                 context.strokeRect(aabb.xMin, aabb.yMin, aabb.width, aabb.height);
             }
         });
-
-        // Render Entities
-        // this.#renderedEntities = 0;
-        // Renderer.All.forEach(renderer => {
-            
-        //     renderer.isVisible = camera.testAABB(renderer.getAABB()); 
-
-        //     if(renderer.isVisible) {
-
-        //         context.save();
-                
-        //         context.translate(renderer.transform.position.x, renderer.transform.position.y);
-        //         context.scale(renderer.transform.scale.x, renderer.transform.scale.y);
-        //         context.rotate(renderer.transform.rotation);
-                                                
-        //         renderer.render(context);
-                
-        //         context.restore();
-        //         this.#renderedEntities++;
-        //     }
-        // });
         
         context.restore();
     }
