@@ -2,11 +2,12 @@ import SObject from "../sobject.js";
 
 class Component extends SObject { 
     
+    get transform() { return this.entity.transform; }
+
     constructor() {
         super();
         
         this.isEnabled = true;
-        this.transform = null;
         this.entity = null;
     }
 

@@ -5,8 +5,8 @@ class SpriteRenderer extends RenderComponent {
 
     #image = null;
 
-    constructor(entity) {
-        super(entity);
+    constructor() {
+        super();
 
         this.#image = null;        
         this.alpha = 1;

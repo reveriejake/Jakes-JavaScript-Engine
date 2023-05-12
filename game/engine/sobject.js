@@ -1,9 +1,9 @@
 
 class SObject {
     
-    constructor() {
+    constructor(name) {
 
-        this.name = "";
+        this.name = name;
         this.tag = "";
      }
     destroy() { }

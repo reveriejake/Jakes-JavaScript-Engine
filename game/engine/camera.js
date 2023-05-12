@@ -1,5 +1,6 @@
 import Bounds from "./bounds.js";
 import Component from "./components/component.js"; 
+import Engine from "./engine.js";
 
 class Camera extends Component {
     
@@ -26,8 +27,8 @@ class Camera extends Component {
         this.clearFadeAlpha = 0.01;
         this.gradientStops = [[0, '#cdf9ff'], [1, '#75d5e3']];
         
-        this.pixelWidth = 1920;
-        this.pixelHeight = 1080;
+        this.pixelWidth = Engine.Canvas.width;
+        this.pixelHeight = Engine.Canvas.height;
         
         this.viewWidth = 1;
         this.viewHeight = 1;

@@ -33,8 +33,7 @@ class Entity extends SObject {
 
     addComponent(type) {
                 
-        let comp = new type();        
-        comp.transform = this.#transform;
+        let comp = new type();
         comp.entity = this;
 
         this.#components.push(comp);

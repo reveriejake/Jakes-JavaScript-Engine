@@ -5,8 +5,8 @@ class CircleRenderer extends RenderComponent {
     #radius = 50;
     set radius(r) {  this.#radius = r; this.bounds.set(-r, -r, r*2, r*2) }
 
-    constructor(entity) {
-        super(entity);
+    constructor() {
+        super();
 
         this.color = 'white';
         this.bounds.set(-this.#radius, -this.#radius, this.#radius * 2, this.#radius * 2);

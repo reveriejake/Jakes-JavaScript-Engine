@@ -20,8 +20,7 @@ class SceneGraph {
 
     static ExportScene(fileName) {
 
-        const scene = { sobjects: this.#SceneObjects };
-        const json = JSON.stringify(scene);
+        const json = JSON.stringify(this.#SceneObjects);
         const blob = new Blob([json], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');

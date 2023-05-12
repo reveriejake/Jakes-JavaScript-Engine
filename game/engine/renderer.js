@@ -1,7 +1,7 @@
 class Renderer {
 
     static #showRenderBounds = false;
-    static set showRenderBounds(b) { this.#showRenderBounds = b; }
+    static enableGizmos(){this.#showRenderBounds=true;}
 
     static #renderedEntitiesCount = 0;
     static get renderedEntitiesCount() { return this.#renderedEntitiesCount; }
@@ -105,9 +105,17 @@ class Renderer {
                 context.save();
                 
                 context.translate(renderer.transform.position.x, renderer.transform.position.y);
-                context.scale(renderer.transform.scale.x, renderer.transform.scale.y);
                 context.rotate(renderer.transform.rotation);
+                context.scale(renderer.transform.scale.x, renderer.transform.scale.y);
                 
+                // context.transform(
+                //     renderer.transform.localMatrix.m[0][0],
+                //     renderer.transform.localMatrix.m[1][0],
+                //     renderer.transform.localMatrix.m[0][1],
+                //     renderer.transform.localMatrix.m[1][1],
+                //     renderer.transform.localMatrix.m[0][2],
+                //     renderer.transform.localMatrix.m[1][2]);
+
                 renderer.render(context);
                 
                 this.#renderedEntitiesCount++;
@@ -118,7 +126,7 @@ class Renderer {
             if(this.#showRenderBounds) {
 
                 context.strokeStyle = 'lime';
-                context.lineWidth = 2;
+                context.lineWidth = 1;
                 context.strokeRect(aabb.xMin, aabb.yMin, aabb.width, aabb.height);
             }
         });

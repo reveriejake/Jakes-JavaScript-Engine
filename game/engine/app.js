@@ -19,7 +19,10 @@ class App {
     run() {
 
         Engine.Initialize(this, this.width, this.height);
+        this.loadContent();
         window.requestAnimationFrame(App.Gameloop);
     }
+
+    loadContent() {}
 }
 export default App;

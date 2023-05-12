@@ -21,8 +21,6 @@ class RenderComponent extends Component {
         this.sortOrder = 0;
         this.isVisible = true;
         this.bounds = new Bounds(-5, -5, 10, 10);
-
-        this.name = 'Renderer';
     }
 
     render(context) { }

@@ -8,8 +8,8 @@ class RectangleRenderer extends RenderComponent {
     set width(w) {  this.#width = w; this.bounds.xMin = -w/2; this.bounds.xMax = this.bounds.xMin + w; }
     set height(h) { this.#height = h; this.bounds.yMin = -h/2; this.bounds.yMax = this.bounds.yMin + h; }
 
-    constructor(entity) {
-        super(entity);
+    constructor() {
+        super();
 
         this.color = 'white';
         this.bounds.set(-this.#width / 2, -this.#height / 2, this.#width, this.#height);
