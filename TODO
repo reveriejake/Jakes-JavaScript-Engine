@@ -1,0 +1,22 @@
+
+[ ] Parenting Transforms
+[ ] Improve Input System
+[ ] Physics Engine
+[ ] Level Loading/Unloading
+[ ] Level SceneGraph
+[ ] UI Classes
+[ ] Serializable Objects for Level Editing
+[ ] SaveGame Class
+[ ] Renderer Performance Improvements (SceneGraph)
+[ ] Particle System
+
+// Extra
+[ ] Settings
+[ ] Database Save Ability
+[ ] High-Score 
+
+// Gameplay Stuff
+[ ] Item Inventory
+[ ] Point Archive
+[ ] Tech Tree
+[ ] 
