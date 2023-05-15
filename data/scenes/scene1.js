@@ -8,7 +8,6 @@ import CameraController from "../behaviours/cameraController.js";
 import Input from "../engine/input.js";
 import SceneManager from "../engine/scenemanager.js";
 import RandomSpawner from "../behaviours/randomSpawner.js";
-import Utilities from "../engine/Utilities.js";
 import Time from "../engine/time.js";
 import Content from "../engine/content.js";
 import SpriteRenderer from "../engine/spriterenderer.js";

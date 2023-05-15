@@ -9,7 +9,6 @@ import Input from "../engine/input.js";
 import SceneManager from "../engine/scenemanager.js";
 import RandomSpawner from "../behaviours/randomSpawner.js";
 import Random from "../engine/random.js";
-import Utilities from "../engine/Utilities.js";
 
 class Scene2 extends Scene {
 
