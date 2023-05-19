@@ -1,6 +1,7 @@
 import Bounds from "./bounds.js";
 import Component from "./component.js";
 import Graphics from "./graphics.js";
+import Matrix from "./matrix.js";
 
 class Camera extends Component {
     
@@ -41,21 +42,23 @@ class Camera extends Component {
         this.viewOriginX = 0;
         this.viewOriginY = 0;
         
-        this.bounds = new Bounds(-this.pixelWidth / 2, -this.pixelHeight / 2, this.pixelWidth, this.pixelHeight);
-        this.viewBounds = new Bounds(this.bounds.xMin, this.bounds.yMin, this.bounds.width, this.bounds.height);
-        
         this.name = 'Camera';
 
         Graphics.AddCamera(this);
     }
 
     testAABB(aabb) {
+
+        const xMin = this.transform.pX + (this.viewOriginX * this.pixelWidth)   - (this.viewWidth * this.pixelWidth     / 2);
+        const yMin = this.transform.pY + (this.viewOriginY * this.pixelHeight)  - (this.viewHeight * this.pixelHeight   / 2);
+        const xMax = this.transform.pX + (this.viewOriginX * this.pixelWidth)   + (this.viewWidth * this.pixelWidth     / 2);
+        const yMax = this.transform.pY + (this.viewOriginY * this.pixelHeight)  + (this.viewHeight * this.pixelHeight   / 2);
                 
         return (
-            aabb.xMax > this.transform.pX - (this.pixelWidth / 2)  &&
-            aabb.yMax > this.transform.pY - (this.pixelHeight / 2) &&
-            aabb.xMin < this.transform.pX + (this.pixelWidth / 2) &&
-            aabb.yMin < this.transform.pY + (this.pixelHeight / 2)
+            aabb.xMax > xMin &&
+            aabb.yMax > yMin &&
+            aabb.xMin < xMax &&
+            aabb.yMin < yMax
         );
     }
 

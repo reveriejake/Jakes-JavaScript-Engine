@@ -3,6 +3,7 @@ import Time from "./time.js";
 import SceneManager from "./scenemanager.js";
 import Behaviour from "./behaviour.js";
 import Input from "./input.js";
+import Physics from "./physics.js";
 
 class Game {
 
@@ -23,10 +24,12 @@ class Game {
 
         Behaviour.Start();
         Behaviour.Update();
-        // update
-        // draw
+        
         Graphics.RenderScene();
         Input.Update();
+
+        Physics.Tick();
+        Behaviour.FixedUpdate();
 
         window.requestAnimationFrame(this.#gameloop);
     }
@@ -34,6 +37,8 @@ class Game {
     run() {
 
         SceneManager.LoadSceneByIndex(0);
+
+        //setInterval(() => { Physics.Tick(); Behaviour.FixedUpdate(); }, 1000/60.0);
         this.#gameloop();
     }
 

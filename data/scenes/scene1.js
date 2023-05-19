@@ -26,6 +26,7 @@ class Scene1 extends Scene {
         this.image4 = await Content.LoadImage('cloud.png');        
         this.image5 = await Content.LoadImage('crate.png');
         this.image6 = await Content.LoadImage('skeleton-sprite-sheet.png');
+        this.image7 = await Content.LoadImage('Atlas20.png');
 
         const camera = new Entity('camera', Camera, CameraController).getComponent(Camera);
         camera.clearType = Camera.ClearType.GRADIENT;

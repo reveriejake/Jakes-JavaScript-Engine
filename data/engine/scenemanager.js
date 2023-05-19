@@ -34,6 +34,11 @@ class SceneManager {
 
     static async LoadSceneByIndex(index) {
 
+        if(index === -1) {
+            console.log("Failed to load scene. No scene found with name or index. Maybe forgot to add scene in main file?");
+            return;
+        }
+
         if(this.#scenes.length === 0) {
 
             this.RegisterScene('null', NullScene);

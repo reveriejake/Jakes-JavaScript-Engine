@@ -38,6 +38,15 @@ class Behaviour extends Component {
         });
     }
 
+    static FixedUpdate() {
+        
+
+        this.#behaviours.forEach(behaviour => {
+
+            behaviour.fixedUpdate();
+        });
+    }
+
     constructor() {
         super();
 
@@ -46,6 +55,7 @@ class Behaviour extends Component {
 
     start() { }
     update() { }
+    fixedUpdate() { }
 
     destroy() {
 

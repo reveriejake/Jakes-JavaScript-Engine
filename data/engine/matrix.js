@@ -10,28 +10,54 @@ class Matrix {
         ]
     }
 
-    rotate(theta) {
+    // rotate(theta) {
         
-        this.multiplyMatrix(Matrix.CreateRotationMatrix(theta));
-    }
+    //     this.multiplyMatrix(Matrix.CreateRotationMatrix(theta));
+    // }
 
-    multiplyMatrix(matrix) {
+    // multiplyMatrix(matrix) {
 
-        this.m[0][0] = matrix.m[0][0] * this.m[0][0] + matrix.m[0][1] * this.m[1][0] + matrix.m[0][2] * this.m[2][0];
-        this.m[0][1] = matrix.m[0][0] * this.m[0][1] + matrix.m[0][1] * this.m[1][1] + matrix.m[0][2] * this.m[2][1];
-        this.m[0][2] = matrix.m[0][0] * this.m[0][2] + matrix.m[0][1] * this.m[1][2] + matrix.m[0][2] * this.m[2][2];          
-        this.m[1][0] = matrix.m[1][0] * this.m[0][0] + matrix.m[1][1] * this.m[1][0] + matrix.m[1][2] * this.m[2][0];
-        this.m[1][1] = matrix.m[1][0] * this.m[0][1] + matrix.m[1][1] * this.m[1][1] + matrix.m[1][2] * this.m[2][1];
-        this.m[1][2] = matrix.m[1][0] * this.m[0][2] + matrix.m[1][1] * this.m[1][2] + matrix.m[1][2] * this.m[2][2];          
-        this.m[2][0] = matrix.m[2][0] * this.m[0][0] + matrix.m[2][1] * this.m[1][0] + matrix.m[2][2] * this.m[2][0];
-        this.m[2][1] = matrix.m[2][0] * this.m[0][1] + matrix.m[2][1] * this.m[1][1] + matrix.m[2][2] * this.m[2][1];
-        this.m[2][2] = matrix.m[2][0] * this.m[0][2] + matrix.m[2][1] * this.m[1][2] + matrix.m[2][2] * this.m[2][2];
-    }
+    //     this.m[0][0] = matrix.m[0][0] * this.m[0][0] + matrix.m[0][1] * this.m[1][0] + matrix.m[0][2] * this.m[2][0];
+    //     this.m[0][1] = matrix.m[0][0] * this.m[0][1] + matrix.m[0][1] * this.m[1][1] + matrix.m[0][2] * this.m[2][1];
+    //     this.m[0][2] = matrix.m[0][0] * this.m[0][2] + matrix.m[0][1] * this.m[1][2] + matrix.m[0][2] * this.m[2][2];          
+    //     this.m[1][0] = matrix.m[1][0] * this.m[0][0] + matrix.m[1][1] * this.m[1][0] + matrix.m[1][2] * this.m[2][0];
+    //     this.m[1][1] = matrix.m[1][0] * this.m[0][1] + matrix.m[1][1] * this.m[1][1] + matrix.m[1][2] * this.m[2][1];
+    //     this.m[1][2] = matrix.m[1][0] * this.m[0][2] + matrix.m[1][1] * this.m[1][2] + matrix.m[1][2] * this.m[2][2];          
+    //     this.m[2][0] = matrix.m[2][0] * this.m[0][0] + matrix.m[2][1] * this.m[1][0] + matrix.m[2][2] * this.m[2][0];
+    //     this.m[2][1] = matrix.m[2][0] * this.m[0][1] + matrix.m[2][1] * this.m[1][1] + matrix.m[2][2] * this.m[2][1];
+    //     this.m[2][2] = matrix.m[2][0] * this.m[0][2] + matrix.m[2][1] * this.m[1][2] + matrix.m[2][2] * this.m[2][2];
+    // }
+
+    // multiplyMatrix(matrix) {
+        
+    //     for (let i = 0; i < matrix.m.length; i++) {
+    //         for (let j = 0; j < matrix.m[i].length; j++) {
+    
+    //             let sum = 0;
+    //             for (let k = 0; k < matrix.m[i].length; k++) {
+                    
+    //                 sum += matrix.m[i][k] * this.m[k][j];
+    //             }
+    //             this.m[i][j] = sum;            
+    //         }
+    //     }
+    // }
+
+    // rotate(theta) {
+
+    //     const rotMatrix = Matrix.CreateRotationMatrix(theta);
+    //     this.m = Matrix.Multiply(this, rotMatrix);
+    // }
+
+    // multiply(matrix) {
+
+    //     this.m = Matrix.Multiply(this, matrix);
+    // }
 
     multiplyPoint(x, y) {
 
-        const tx = this.m[0][0] * x + this.m[0][1] * y + this.m[0][2];
-        const ty = this.m[1][0] * x + this.m[1][1] * y + this.m[1][2];
+        const tx = this.m[0][0] * x + this.m[0][1] * y + this.m[2][0];
+        const ty = this.m[1][0] * x + this.m[1][1] * y + this.m[2][1];
 
         return { x: tx, y : ty };
     }

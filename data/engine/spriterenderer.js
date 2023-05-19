@@ -1,9 +1,9 @@
 import RenderableComponent from "./renderableComponent.js";
+import Time from "./time.js";
 
 class SpriteRenderer extends RenderableComponent {
 
     #image = null;
-
     constructor() {
         super();
 
@@ -19,7 +19,7 @@ class SpriteRenderer extends RenderableComponent {
         this.flipX = false;
         this.flipY = false;
     }
-
+        
     setSprite(image, srcWidth, srcHeight) {
 
         this.#image = image;
@@ -29,6 +29,7 @@ class SpriteRenderer extends RenderableComponent {
     render(context) {
         
         if(this.#image) {
+
             context.globalAlpha = this.alpha;
 
             context.save();

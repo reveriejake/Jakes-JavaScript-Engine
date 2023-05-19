@@ -6,7 +6,7 @@ class RenderableComponent extends Component {
 
     #sortOrder = 0;
     get sortOrder() { return this.#sortOrder; }
-    set sortOrder(value) { this.#sortOrder = value; Graphics.Sortrenderables(); };
+    set sortOrder(value) { this.#sortOrder = value; Graphics.SortRenderables(); };
     
     #isVisible = true;
     get isVisible() { return this.#isVisible; }
@@ -19,7 +19,7 @@ class RenderableComponent extends Component {
         super();
 
         Graphics.AddRenderable(this);
-        Graphics.Sortrenderables();
+        Graphics.SortRenderables();
     }
 
     render(context) { }
@@ -44,7 +44,7 @@ class RenderableComponent extends Component {
             max.y = Math.max(max.y, points[i].y);
         }
 
-        return new Bounds(this.transform.pX + min.x, this.transform.pY + min.y, max.x - min.x, max.y - min.y);
+        return new Bounds(min.x, min.y, max.x - min.x, max.y - min.y);
     }
 
     destroy() {

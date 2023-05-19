@@ -44,7 +44,7 @@ class Scene3 extends Scene {
 
         if(Input.IsKeyDown(Input.KeyCode.R)) {
 
-            SceneManager.LoadSceneByIndex(SceneManager.GetSceneIndex('scene1'));
+            SceneManager.LoadSceneByIndex(SceneManager.GetSceneIndex('scene4'));
         }
         
         if(Input.IsKeyDown(Input.KeyCode.M)) {
