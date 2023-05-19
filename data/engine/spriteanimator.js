@@ -4,6 +4,8 @@ import Time from "./time.js";
 
 class SpriteAnimator extends Behaviour {
 
+    frameRateMultiplier = 1;
+
     #animations = new Map();
 
     #sprite = null;
@@ -30,7 +32,7 @@ class SpriteAnimator extends Behaviour {
         // update animation frames
         if(Time.time > this.#animNextFrameTime) {
     
-            this.#animNextFrameTime = Time.time + (1.0 / this.#animFrameRate);
+            this.#animNextFrameTime = (Time.time + (1.0 / this.#animFrameRate)) / this.frameRateMultiplier;
 
             this.#frameIndex++;
             if(this.#frameIndex > this.#animFameEnd)

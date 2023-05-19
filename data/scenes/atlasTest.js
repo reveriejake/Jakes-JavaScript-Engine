@@ -14,6 +14,7 @@ import SpriteRenderer from "../engine/spriterenderer.js";
 import SObject from "../engine/sobject.js";
 import Random from "../engine/random.js";
 import SpriteAnimator from "../engine/spriteanimator.js";
+import Gizmos from "../engine/editor/gizmos.js";
 
 class AtlasTest extends Scene {
     
@@ -121,6 +122,8 @@ class AtlasTest extends Scene {
         }
 
         this.mainSprite.transform.pX = 250 + Math.sin(Time.time) * 250;
+
+        Gizmos.DrawBox(this.mainSprite.transform.pX, this.mainSprite.transform.pY, this.mainSprite.width, this.mainSprite.height, false, 'lime', 1, 1, 0);
     }
 }
 export default AtlasTest;

@@ -32,7 +32,7 @@ class Rigidbody extends Component {
         this.transform.pX += this.vX * Time.deltaTime;
         this.transform.pY += this.vY * Time.deltaTime;
 
-        Gizmos.DrawRay(this.transform.pX, this.transform.pY, this.vX * 0.1, this.vY * 0.1, 'red', 5);
+        Gizmos.DrawRay(this.transform.pX, this.transform.pY, this.vX * 0.1, this.vY * 0.1, 'yellowrtr', 2);
     }
 
     addForce(x, y) {

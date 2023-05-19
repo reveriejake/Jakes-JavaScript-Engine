@@ -131,53 +131,11 @@ class Graphics {
             break;
         }
     }
-
-    static #RenderCamera(ctx, camera) {
-
-        // Sort Renderers
-        if(this.#sortFlag) {
-            this.#sortFlag = false;
-            this.#renderables.sort((a, b) => { return (a.sortOrder > b.sortOrder) ? 1 : -1; });
-        }
-
-        this.#renderedEntitiesCount = 0;
-        this.#renderables.forEach(renderer => {
-
-            const aabb = renderer.getAABB();
-            renderer.isVisible = camera.testAABB(aabb);
-            
-            if(renderer.isVisible) {
-                
-                ctx.save();
-                
-                ctx.transform(
-                    renderer.transform.localToWorldMatrix.m[0][0], 
-                    renderer.transform.localToWorldMatrix.m[1][0], 
-                    renderer.transform.localToWorldMatrix.m[0][1], 
-                    renderer.transform.localToWorldMatrix.m[1][1], 
-                    renderer.transform.localToWorldMatrix.m[2][0],
-                    renderer.transform.localToWorldMatrix.m[2][1]
-                );
-                    
-                renderer.render(ctx);
-                this.#renderedEntitiesCount++;
-                
-                ctx.restore();
-                
-                // Render AABB Bounds
-                if(EditorSettings.ShowRenderBounds) {
-                    ctx.strokeStyle = 'lime';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(aabb.xMin, aabb.yMin, aabb.width, aabb.height);
-                }
-            }
-        });
-    }
-
+    
     static #ShowLoadingScreen(ctx) {
         
         const loadingText = 'Loading Scene...';
-
+        
         ctx.clearRect(0, 0, this.Width, this.Height);
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, this.Width, this.Height);
@@ -189,16 +147,16 @@ class Graphics {
     static #ShowNoCameraScreen(ctx) {
 
         const noCamText = '[No Camera Detected In Scene]';
-
+        
         ctx.clearRect(0, 0, this.Width, this.Height);
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, this.Width, this.Height);
         ctx.fillStyle = 'white';            
         ctx.font = '30px Consolas';
         ctx.fillText(noCamText, this.Width / 2 + (-ctx.measureText(noCamText).width / 2), this.Height / 2 );
-
+        
     }
-
+    
     static RenderScene() {
 
         const ctx = this.#context;
@@ -208,58 +166,104 @@ class Graphics {
             this.#ShowLoadingScreen(ctx);
             return;
         }
-
+        
         if(this.#cameras.length === 0) { 
 
             this.#ShowNoCameraScreen();
             return;
         } 
-
+        
         this.#cameras.forEach(camera => {
             if(camera.isEnabled) { 
                 
                 this.#ClipCamera(ctx, camera);
                 this.#ClearScreen(ctx, camera);
-
-                const camMatrix = camera.transform.localToWorldMatrix;
-
+                                
                 ctx.save();
+                
+                // Position camera based on its matrix
+                const camMatrix = camera.transform.localToWorldMatrix;
                 ctx.transform(camMatrix.m[0][0],camMatrix.m[1][0],camMatrix.m[0][1],camMatrix.m[1][1], -camMatrix.m[2][0] + camera.pixelWidth / 2, -camMatrix.m[2][1] + camera.pixelHeight / 2)
                 
                 // Draw Editor Grid
                 if(EditorSettings.ShowGrid) {
                     Gizmos.DrawCameraGrid(ctx, camera);
                 }
-
+                
                 this.#RenderCamera(ctx, camera);
-
+                
                 // Draw Editor Gizmos
                 if(EditorSettings.ShowGizmos) {
                     Gizmos.Render(ctx);
                 }
-
+                
                 ctx.restore();
             }
         });
-
+        
         ctx.font = 'bold 20px Consolas';
         ctx.fillStyle = 'white';
         ctx.textAlign = 'left';
-
+        
         ctx.fillText(`Render : ${ this.renderedEntitiesCount } / ${ this.renderersCount }`, 35, 35);
         ctx.fillText(`Scene: ${ SceneManager.GetCurrentSceneName() }`, 35, 65);
         ctx.fillText(`Behaviours: ${ Behaviour.BehavioursInScene() }`, 35, 95);
         ctx.fillText(`Components: ${ Component.ComponentCount }`, 35, 125);
-
+        
         ctx.globalAlpha = 0.75;
         ctx.fillStyle = 'white';
         ctx.fillRect(this.#canvas.width - 160, 10, 150, 35);
         ctx.globalAlpha = 1;
-
+        
         ctx.textAlign = 'right';
         ctx.fillStyle = 'black';
         ctx.fillText(`FPS : ${ Time.fps }`, this.#canvas.width - 35, 35);
+        
+    }
 
+    static #RenderCamera(ctx, camera) {
+
+        // Sort Renderers
+        if(this.#sortFlag) {
+            this.#sortFlag = false;
+            this.#renderables.sort((a, b) => { return (a.sortOrder > b.sortOrder) ? 1 : -1; });
+        }
+
+        this.#renderedEntitiesCount = 0;
+        this.#renderables.forEach(renderer => {
+            
+            if(renderer.isEnabled) {            
+
+                const aabb = renderer.getAABB();
+                renderer.isVisible = camera.testAABB(aabb);
+                
+                if(renderer.isVisible) {
+                    
+                    ctx.save();
+                    
+                    ctx.transform(
+                        renderer.transform.localToWorldMatrix.m[0][0], 
+                        renderer.transform.localToWorldMatrix.m[1][0], 
+                        renderer.transform.localToWorldMatrix.m[0][1], 
+                        renderer.transform.localToWorldMatrix.m[1][1], 
+                        renderer.transform.localToWorldMatrix.m[2][0],
+                        renderer.transform.localToWorldMatrix.m[2][1]
+                    );
+                        
+                    renderer.render(ctx);
+                    this.#renderedEntitiesCount++;
+                    
+                    ctx.restore();
+                    
+                    // Render AABB Bounds
+                    if(EditorSettings.ShowRenderBounds) {
+                        ctx.strokeStyle = 'lime';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(aabb.xMin, aabb.yMin, aabb.width, aabb.height);
+                    }
+                }
+            }
+        });
     }
 }
 export default Graphics;

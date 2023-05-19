@@ -27,9 +27,7 @@ class Scene4 extends Scene {
         const crateImg = await Content.LoadImage('crate.png');
         
         const crate = new Entity('crate', Rigidbody, SpriteRenderer).getComponent(SpriteRenderer);
-        crate.width = 200;
-        crate.height = 200;
-                
+        
         crate.setSprite(crateImg, crateImg.width, crateImg.height);
         crate.transform.sX = 0.25;
         crate.transform.sY = 0.25;

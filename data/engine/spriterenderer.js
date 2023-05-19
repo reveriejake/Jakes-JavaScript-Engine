@@ -3,12 +3,22 @@ import Time from "./time.js";
 
 class SpriteRenderer extends RenderableComponent {
 
+    #width = 100;
+    get width() { return this.#width; }
+
+    #height = 100;
+    get height() { return this.#height; }
+
     #image = null;
+
     constructor() {
         super();
 
         this.#image = null;        
         this.alpha = 1;
+
+        this.#width = 100;
+        this.#height = 100;
 
         this.anchorX = 0.5;
         this.anchorY = 0.5;
@@ -23,6 +33,9 @@ class SpriteRenderer extends RenderableComponent {
     setSprite(image, srcWidth, srcHeight) {
 
         this.#image = image;
+        this.#width = srcWidth;
+        this.#height = srcHeight;
+        
         this.bounds.set(-srcWidth / 2, -srcHeight / 2, srcWidth, srcHeight);
     }
 

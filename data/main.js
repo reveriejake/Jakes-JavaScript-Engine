@@ -18,6 +18,7 @@ window.onload = () => {
     
     EditorSettings.ShowGrid = true;
     EditorSettings.ShowGizmos = true;
+    EditorSettings.ShowRenderBounds = false;
 
     game.run();
 
