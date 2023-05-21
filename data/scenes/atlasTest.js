@@ -15,6 +15,8 @@ import SObject from "../engine/sobject.js";
 import Random from "../engine/random.js";
 import SpriteAnimator from "../engine/spriteanimator.js";
 import Gizmos from "../engine/editor/gizmos.js";
+import PlayerController from "../behaviours/playerController.js";
+import FollowBehaviour from "../behaviours/followBehaviour.js";
 
 class AtlasTest extends Scene {
     
@@ -23,22 +25,29 @@ class AtlasTest extends Scene {
         console.log('load scene 1');
 
         this.playerSprite = await Content.LoadImage('Atlas0.png');
+        this.skellySprite = await Content.LoadImage('skeleton-sprite-sheet.png');
         this.foliageSprite = await Content.LoadImage('foliage-sample1.png');
 
-        this.mainCamera = new Entity('Camera', Camera, CameraController).getComponent(Camera);
+        this.mainCamera = new Entity('Camera', Camera, FollowBehaviour).getComponent(Camera);
         this.mainCamera.clearType = Camera.ClearType.GRADIENT;
         this.mainCamera.clearGradient = Camera.Gradients.DeepSpace;
 
-        this.mainSprite = new Entity('Player', SpriteRenderer).getComponent(SpriteRenderer);
-        this.mainSprite.setSprite(this.playerSprite, this.playerSprite.width / 3, this.playerSprite.height / 3);
+        this.player = new Entity('Player', SpriteRenderer, PlayerController).getComponent(SpriteRenderer);
+        this.player.setSprite(this.skellySprite, this.skellySprite.width / 9, this.skellySprite.height / 4);
+        this.player.transform.sX = 2;
+        this.player.transform.sY = 2;
+        this.player.transform.r = 0;
 
-        this.playerAnimator = this.mainSprite.addComponent(SpriteAnimator);
-        this.playerAnimator.spriteCellsX = 3;
-        this.playerAnimator.spriteCellsY = 3;
-        this.playerAnimator.addAnimation('run', 0, 7, 12);
-        this.playerAnimator.setAnimation('run');
+        this.playerAnimator = this.player.addComponent(SpriteAnimator);
+        this.playerAnimator.setCellCount(9, 4);
+        this.playerAnimator.addAnimation('idle', 27, 27, 12);
+        this.playerAnimator.addAnimation('run', 27, 35, 12);
+        this.playerAnimator.setAnimation('idle');
 
-        // this.plants = [];
+        const follower = this.mainCamera.getComponent(FollowBehaviour);
+        follower.target = this.player.transform;
+
+        this.plants = [];
         
         // this.plants.push(new Entity('plant01', SpriteRenderer).getComponent(SpriteRenderer));
         // this.plants.push(new Entity('plant02', SpriteRenderer).getComponent(SpriteRenderer));
@@ -47,7 +56,7 @@ class AtlasTest extends Scene {
         // this.plants.push(new Entity('plant05', SpriteRenderer).getComponent(SpriteRenderer));
         // this.plants.push(new Entity('plant06', SpriteRenderer).getComponent(SpriteRenderer));
         // this.plants.push(new Entity('plant07', SpriteRenderer).getComponent(SpriteRenderer));
-        // this.plants.push(new Entity('plant08', SpriteRenderer).getComponent(SpriteRenderer));        
+        // this.plants.push(new Entity('plant08', SpriteRenderer).getComponent(SpriteRenderer));
         // this.plants.push(new Entity('plant09', SpriteRenderer).getComponent(SpriteRenderer));
         // this.plants.push(new Entity('plant10', SpriteRenderer).getComponent(SpriteRenderer));
         // this.plants.push(new Entity('plant11', SpriteRenderer).getComponent(SpriteRenderer));
@@ -109,7 +118,7 @@ class AtlasTest extends Scene {
         // this.plants[15].frameY = 1;
 
         // this.plants.forEach(plant => {
-        //     plant.transform.pX = Random.Range(-600, 600);
+        //     plant.transform.pX = Random.Range(-1200, 1200);
         //     plant.transform.pY = Random.Range(-200, 200);
         // });
     }
@@ -118,12 +127,30 @@ class AtlasTest extends Scene {
 
         if(Input.IsKeyDown(Input.KeyCode.R)) {
 
-            SceneManager.LoadSceneByIndex(SceneManager.GetSceneIndex('scene1'));
+            SceneManager.LoadSceneByIndex(SceneManager.GetSceneIndex('WebURLImageScene'));
         }
 
-        this.mainSprite.transform.pX = 250 + Math.sin(Time.time) * 250;
+        //this.mainSprite.transform.pX = 250 + Math.sin(Time.time) * 250;
 
-        Gizmos.DrawBox(this.mainSprite.transform.pX, this.mainSprite.transform.pY, this.mainSprite.width, this.mainSprite.height, false, 'lime', 1, 1, 0);
+        //Gizmos.DrawBox(this.mainSprite.transform.pX, this.mainSprite.transform.pY, this.mainSprite.width, this.mainSprite.height, false, 'lime', 1, 1, 0);
+
+        const plant = new Entity('plant01', SpriteRenderer).getComponent(SpriteRenderer);
+        plant.setSprite(this.foliageSprite, this.foliageSprite.width / 8, this.foliageSprite.height / 8);
+        plant.alpha = 1;
+        plant.frameX = Math.floor(Random.Range(0, 8));
+        plant.frameY = Math.floor(Random.Range(0, 2));
+        plant.transform.pX = Random.Range(-1100, 1100);
+        plant.transform.pY = Random.Range(-600, 600);
+        plant.transform.r = Random.Range(0, 360);
+        plant.sortOrder = -Random.Range(5,500);
+
+        this.plants.push(plant);
+
+        while(this.plants.length > 500) {
+            
+            const pl = this.plants.shift();
+            Entity.Destroy(pl.entity);
+        }
     }
 }
 export default AtlasTest;

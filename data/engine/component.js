@@ -38,8 +38,6 @@ class Component extends SObject {
     destroy() {
 
         Component.ComponentCount--;
-
-        //console.log('destory component');
         super.destroy();
     }
 }

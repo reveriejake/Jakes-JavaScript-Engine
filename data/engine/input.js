@@ -135,6 +135,5 @@ class Input {
 
         return state.isUpState;
     }
-
 }
 export default Input;

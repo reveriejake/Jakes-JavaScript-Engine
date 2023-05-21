@@ -43,14 +43,14 @@ class DebugBox extends DebugShape {
 
     draw(ctx) {
 
-        ctx.rect(this.cX - (this.width / 2), this.cY - (this.height / 2), this.width, this.height);
-
-        if(ctx.isFilled) {
+        if(this.isFilled) {
+            
             ctx.fillStyle = this.color;
-            ctx.fill();
+            ctx.fillRect(this.cX - (this.width / 2), this.cY - (this.height / 2), this.width, this.height);
         } else {
+
             ctx.strokeStyle = this.color;
-            ctx.stroke();
+            ctx.strokeRect(this.cX - (this.width / 2), this.cY - (this.height / 2), this.width, this.height);
         }
     }
 }
@@ -78,28 +78,53 @@ class DebugDot extends DebugShape {
     }
 }
 
+class DebugText extends DebugShape {
+
+    constructor(x, y, text, font, textAlign, color, alpha, lineWidth) {
+        super(color, alpha, lineWidth);
+
+        this.x = x;
+        this.y = y;
+        this.text = text;
+        this.font = font;
+        this.textAlign = textAlign;
+    }
+
+    draw(ctx) {
+
+        ctx.font = this.font;
+        ctx.textAlign = this.textAlign;
+        ctx.fillText(this.text, this.x, this.y);
+    }
+}
+
 class Gizmos extends DebugShape  { 
 
     static #shapes = [];
 
     static DrawPoint(x, y, radius, isFilled, color = 'white', alpha = 1, lineWidth = 1, life = 0) {
 
-        this.#shapes.push([Time.time, life, new DebugDot(x, y, radius, isFilled, color, alpha, lineWidth)]);
+        this.#shapes.push([Time.time, Time.frame, life, new DebugDot(x, y, radius, isFilled, color, alpha, lineWidth)]);
     }
 
     static DrawBox(cX, cY, width, height, isFilled, color = 'white', alpha = 1, lineWidth = 1, life = 0) {
 
-        this.#shapes.push([Time.time, life, new DebugBox(cX, cY, width, height, isFilled, color, alpha, lineWidth)])
+        this.#shapes.push([Time.time, Time.frame, life, new DebugBox(cX, cY, width, height, isFilled, color, alpha, lineWidth)])
     }
 
     static DrawLine(aX, aY, bX, bY, color = 'white', alpha = 1, lineWidth = 1, life = 0) {
 
-        this.#shapes.push([Time.time, life, new DebugLine(aX, aY, bX, bY, color, alpha, lineWidth)]);
+        this.#shapes.push([Time.time, Time.frame, life, new DebugLine(aX, aY, bX, bY, color, alpha, lineWidth)]);
     }
 
     static DrawRay(pX, pY, dX, dY, color = 'white', alpha = 1, lineWidth = 1, life = 0) {
 
-        this.#shapes.push([Time.time, life, new DebugLine(pX, pY, pX + dX, pY + dY, color, alpha, lineWidth)]);
+        this.#shapes.push([Time.time, Time.frame, life, new DebugLine(pX, pY, pX + dX, pY + dY, color, alpha, lineWidth)]);
+    }
+
+    static DrawText(x, y, text, font = '20px Consolas', textAlign = 'center', color = 'white', alpha = 1, lineWidth = 1, life = 0) {
+
+        this.#shapes.push([Time.time, Time.frame, life, new DebugText(x, y, text, font, textAlign, color, alpha, lineWidth)]);
     }
 
     static DrawCameraGrid(ctx, camera, gridSize = 100) {
@@ -154,7 +179,7 @@ class Gizmos extends DebugShape  {
         const preAlpha = ctx.globalAlpha;
         const time = Time.time;
 
-        this.#shapes.forEach(([t, l, s], index) => {
+        this.#shapes.forEach(([t, f, l, s], index) => {
             
             ctx.globalAlpha = s.alpha;
             ctx.fillStyle = s.color;

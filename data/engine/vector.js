@@ -1,27 +1,33 @@
 
 class Vector {
 
-    static Dot(x1, y1, x2, y2) {
+    static Distance(ax, ay, bx, by) {
 
-        return 0;
-    }
-
-    static Distance(aX, aY, bX, bY) {
-
-        const a = bX - aX;
-        const b = bY - aY;
+        const a = bx - ax;
+        const b = by - ay;
 
         return Math.sqrt(a * a + b * b);
     }
 
+    static Length(x, y) {
+
+        return Math.sqrt(x * x + y * y);
+    }
+
     static Normalize(x, y) {
 
-        const max = Math.max(Math.abs(x), Math.abs(y));
-        
-        const nX = x / max;
-        const nY = y / max;
+        const len = Vector.Length(x, y);
+        return { x: x / len, y: y / len };
+    }
 
-        return { x:nX, y:nY };
+    static Dot(ax, ay, bx, by) {
+
+        return ax * bx + ay * by;
+    }
+
+    static Cross(ax, ay, bx, by) {
+
+        return ax * by - ay * bx;
     }
 }
 export default Vector;

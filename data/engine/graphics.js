@@ -3,6 +3,8 @@ import Component from "./component.js";
 import EditorSettings from "./editor/editorsettings.js";
 import Gizmos from "./editor/gizmos.js";
 import Matrix from "./matrix.js";
+import PMath from "./pmath.js";
+import Scene from "./scene.js";
 import SceneManager from "./scenemanager.js";
 import Time from "./time.js";
 
@@ -10,8 +12,8 @@ class Graphics {
 
     static get Context() { return this.#context; }
     
-    static get Height() { return this.#canvas.height; }
     static get Width() { return this.#canvas.width; }
+    static get Height() { return this.#canvas.height; }
 
     static #canvas;
     static #context;
@@ -132,40 +134,68 @@ class Graphics {
         }
     }
     
+    static #barPercent = 0;
     static #ShowLoadingScreen(ctx) {
         
-        const loadingText = 'Loading Scene...';
-        
-        ctx.clearRect(0, 0, this.Width, this.Height);
+        ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
         ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, this.Width, this.Height);
-        ctx.fillStyle = 'white';            
-        ctx.font = '30px Consolas';
-        ctx.fillText(loadingText, this.Width / 2 + (-ctx.measureText(loadingText).width / 2), this.Height / 2 );
+        ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height);
+        
+        if(SceneManager.ProgressEnabled()) {
+                   
+            let fontSize = 15;
+            let barWidth = 500;
+            let barHeight = 15;
+            let barX = (this.#canvas.width / 2) - (barWidth / 2);
+            let barY = (this.#canvas.height / 2) - (barHeight / 2);
+            
+            
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.font = `${fontSize}px Consolas`;
+
+            ctx.strokeRect(barX, barY, barWidth, barHeight);
+
+            this.#barPercent = PMath.Lerp(this.#barPercent, SceneManager.GetLoadProgress(), 0.1);
+            ctx.fillRect(barX, barY, this.#barPercent * barWidth, barHeight);
+
+            let barText = SceneManager.GetLoadProgressText();
+            let barTextSize = ctx.measureText(barText);
+            ctx.fillText(barText, barX, barY + barHeight + fontSize);
+
+        } else {
+
+            const loadingText = 'Loading Scene...';
+            ctx.fillStyle = 'white';            
+            ctx.font = '30px Consolas';
+            ctx.fillText(loadingText, this.#canvas.width / 2 + (-ctx.measureText(loadingText).width / 2), this.#canvas.height / 2 );
+        }
     }
 
     static #ShowNoCameraScreen(ctx) {
 
         const noCamText = '[No Camera Detected In Scene]';
         
-        ctx.clearRect(0, 0, this.Width, this.Height);
+        ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
         ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, this.Width, this.Height);
+        ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height);
         ctx.fillStyle = 'white';            
         ctx.font = '30px Consolas';
-        ctx.fillText(noCamText, this.Width / 2 + (-ctx.measureText(noCamText).width / 2), this.Height / 2 );
+        ctx.fillText(noCamText, this.#canvas.width / 2 + (-ctx.measureText(noCamText).width / 2), this.#canvas.height / 2 );
         
     }
     
     static RenderScene() {
 
         const ctx = this.#context;
+        ctx.resetTransform();
 
         if(SceneManager.IsSceneLoading()) {
 
             this.#ShowLoadingScreen(ctx);
             return;
         }
+        this.#barPercent = 0;
         
         if(this.#cameras.length === 0) { 
 
@@ -201,23 +231,23 @@ class Graphics {
             }
         });
         
-        ctx.font = 'bold 20px Consolas';
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'left';
+        // ctx.font = 'bold 20px Consolas';
+        // ctx.fillStyle = 'white';
+        // ctx.textAlign = 'left';
         
-        ctx.fillText(`Render : ${ this.renderedEntitiesCount } / ${ this.renderersCount }`, 35, 35);
-        ctx.fillText(`Scene: ${ SceneManager.GetCurrentSceneName() }`, 35, 65);
-        ctx.fillText(`Behaviours: ${ Behaviour.BehavioursInScene() }`, 35, 95);
-        ctx.fillText(`Components: ${ Component.ComponentCount }`, 35, 125);
+        // ctx.fillText(`Render : ${ this.renderedEntitiesCount } / ${ this.renderersCount }`, 35, 35);
+        // ctx.fillText(`Scene: ${ SceneManager.GetCurrentSceneName() }`, 35, 65);
+        // ctx.fillText(`Behaviours: ${ Behaviour.BehavioursInScene() }`, 35, 95);
+        // ctx.fillText(`Components: ${ Component.ComponentCount }`, 35, 125);
         
-        ctx.globalAlpha = 0.75;
-        ctx.fillStyle = 'white';
-        ctx.fillRect(this.#canvas.width - 160, 10, 150, 35);
-        ctx.globalAlpha = 1;
+        // ctx.globalAlpha = 0.75;
+        // ctx.fillStyle = 'white';
+        // ctx.fillRect(this.#canvas.width - 160, 10, 150, 35);
+        // ctx.globalAlpha = 1;
         
-        ctx.textAlign = 'right';
-        ctx.fillStyle = 'black';
-        ctx.fillText(`FPS : ${ Time.fps }`, this.#canvas.width - 35, 35);
+        // ctx.textAlign = 'right';
+        // ctx.fillStyle = 'black';
+        // ctx.fillText(`FPS : ${ Time.fps }`, this.#canvas.width - 35, 35);
         
     }
 

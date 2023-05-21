@@ -12,7 +12,7 @@ import Random from "../engine/random.js";
 import Content from "../engine/content.js";
 import SpriteRenderer from "../engine/spriterenderer.js";
 import SObject from "../engine/sobject.js";
-import Rigidbody from "../engine/rididbodycomponent.js";
+import Rigidbody from "../engine/physics/rigidbody.js";
 import FollowBehaviour from "../behaviours/followBehaviour.js";
 
 class Scene4 extends Scene {

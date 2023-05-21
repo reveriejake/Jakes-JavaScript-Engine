@@ -3,7 +3,7 @@ import Time from "./time.js";
 import SceneManager from "./scenemanager.js";
 import Behaviour from "./behaviour.js";
 import Input from "./input.js";
-import Physics from "./physics.js";
+import Physics from "./physics/physics.js";
 
 class Game {
 
@@ -14,32 +14,42 @@ class Game {
 
         Input.Initialize();
         Graphics.Initialize(width, height);
+
     }
 
-    #gameloop = () => {
-
-        Time.Update();
-
-        SceneManager.UpdateScene();
-
-        Behaviour.Start();
-        Behaviour.Update();
+    #nextUpdate = 0;
+    
+    #gameloop = (time) => {
         
         Graphics.RenderScene();
-        Input.Update();
+        
+        Time.Update();
+        
+        SceneManager.UpdateScene();
+        
+        Behaviour.Start();
+        Behaviour.Update();
 
+        // ToDo: Remove Context Reference here, build Immediate GUI class
+        Behaviour.OnUI(Graphics.Context);
+        
         Physics.Tick();
         Behaviour.FixedUpdate();
-
+        
+        Input.Update();
+        
         window.requestAnimationFrame(this.#gameloop);
     }
-
+    
     run() {
-
+        
         SceneManager.LoadSceneByIndex(0);
-
+        
         //setInterval(() => { Physics.Tick(); Behaviour.FixedUpdate(); }, 1000/60.0);
+        //window.setInterval(() => { Graphics.RenderScene(); }, 1000/60.0);
         this.#gameloop();
+
+        //window.setInterval(() => { this.#gameloop(); Graphics.RenderScene(); }, 1000.0/200.0);
     }
 
     registerScene(name, scene) {

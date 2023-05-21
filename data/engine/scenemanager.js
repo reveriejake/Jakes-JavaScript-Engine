@@ -13,12 +13,25 @@ class SceneManager {
 
     static #activeScene = null;
     static #sceneLoaded = false;
+    
+    static #progressEnabled = false;
+    static #progressText = 'loading';
+    static #progressItemsTotal = 0;
+    static #progressItemsCompleted = 0;
 
     static OnUnloadScene = new  Event("onUnloadScene");
 
     static IsSceneLoading() { return !this.#sceneLoaded; }
 
     static GetCurrentSceneName() { return this.#activeScene.name; }
+
+    static ProgressEnabled() { return this.#progressEnabled; }
+    static EnableProgressBar() { this.#progressEnabled = true; }
+    static ResetLoadProgress(progressItemCount) { this.#progressItemsTotal = progressItemCount; this.#progressItemsCompleted = 0;  }
+    static TickLoadProgress() { this.#progressItemsCompleted++; }
+    static GetLoadProgress() { return (this.#progressItemsCompleted / this.#progressItemsTotal); }
+    static SetLoadProgressText(text) { this.#progressText = text; }
+    static GetLoadProgressText() { return this.#progressText; }
 
     static RegisterScene(name, scene) {
 
@@ -56,7 +69,8 @@ class SceneManager {
                 
                 await SObject.RemoveAllObjects();
             }
-            
+
+            this.#progressEnabled = false;
             this.#activeScene = this.#scenes[index];
             await this.#activeScene.load();
             SceneManager.#sceneLoaded = true;

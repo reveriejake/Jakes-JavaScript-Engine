@@ -4,13 +4,11 @@ import Transform from "./transform.js";
 
 class Entity extends SObject {
 
-    static #allComponents = [];
-    
     #components = [];
 
     #transform;
     get transform() { return this.#transform; }
-
+    
     constructor(name, ...components) {
         super();
 
@@ -31,7 +29,7 @@ class Entity extends SObject {
         comp.entity = this;
 
         this.#components.push(comp);
-        Entity.#allComponents.push(comp);
+
         return comp;
     }
 
@@ -57,7 +55,9 @@ class Entity extends SObject {
 
     destroy() {
 
-        //console.log('destroy entity');
+        this.#components.forEach(component => {
+            SObject.Destroy(component);
+        });
 
         super.destroy();
     }

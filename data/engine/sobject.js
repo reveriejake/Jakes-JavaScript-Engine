@@ -14,12 +14,12 @@ class SObject {
             return null;
     }
 
-    static AddObject(obj) {
+    static #AddObject(obj) {
 
         this.#allObjects.push(obj);
     }
 
-    static RemoveObject(obj) { 
+    static #RemoveObject(obj) { 
 
         if(this.#allObjects.includes(obj)) {
             
@@ -29,22 +29,17 @@ class SObject {
         }
     }
 
-    static async RemoveAllObjects() {
+    static RemoveAllObjects() {
 
-        return new Promise((resolve, reject) => {
-
-            this.#allObjects.forEach(obj => {
-
-                obj.destroy();
-            });
-
-            this.#allObjects = [];
-
-            resolve();
+        this.#allObjects.forEach(obj => {
+            this.Destroy(obj);
         });
+        
+        console.log(this.#allObjects.length);
     }
 
     static Save(name) {
+
         var a = document.createElement('a');
         var file = new Blob([JSON.stringify(this.#allObjects)], {type: 'text/plain'});
         a.href = URL.createObjectURL(file);
@@ -54,18 +49,20 @@ class SObject {
 
     constructor() {
 
+        this.dontDestroyOnLoad = false;
         this.name = "";
-        SObject.AddObject(this);
+        SObject.#AddObject(this);
     }
 
-    destroy() {
-
-        //console.log('destroy sobject');
-    }
+    destroy() { }
 
     static Destroy(obj) { 
 
-        SObject.RemoveObject(obj);
+        if(obj.dontDestroyOnLoad) {
+            return;
+        }
+
+        SObject.#RemoveObject(obj);
     }
 }
 export default SObject;

@@ -47,6 +47,14 @@ class Behaviour extends Component {
         });
     }
 
+    static OnUI(ctx) {
+
+        this.#behaviours.forEach(behaviour => {
+
+            behaviour.onUI(ctx);
+        });
+    }
+
     constructor() {
         super();
 
@@ -56,6 +64,7 @@ class Behaviour extends Component {
     start() { }
     update() { }
     fixedUpdate() { }
+    onUI(ctx){}
 
     destroy() {
 

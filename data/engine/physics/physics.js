@@ -20,6 +20,20 @@ class Physics {
         }
     }
 
+    static AddCollider(collider) { 
+
+        this.#colliders.push(collider);
+    }
+
+    static RemoveCollider(collider) {
+        
+        if(this.#colliders.includes(collider)) {
+
+            const index = this.#colliders.indexOf(collider);
+            this.#colliders.splice(index, 1);
+        }
+    }
+
     static Tick() {
 
         this.#bodies.forEach(body => { body.tick(); });

@@ -3,7 +3,7 @@ import Time from "../engine/time.js";
 
 class RotateBehaviour extends Behaviour {
 
-    speed = 5;
+    speed = 50;
     randomDirection = true;
     randomSpeed = true;
 
@@ -15,7 +15,7 @@ class RotateBehaviour extends Behaviour {
             this.#direction = Math.random() > 0.5 ? -1 : 1;
 
         if(this.randomSpeed);
-            this.speed =  1 + Math.random() * (this.speed - 1);
+            this.speed =  10 + Math.random() * (this.speed - 10);
     }
 
     update() {

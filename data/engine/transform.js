@@ -44,7 +44,7 @@ class Transform extends Component {
 
     const tMatrix = Matrix.CreateTranslationMatrix(this.#pX, this.#pY);
     const sMatrix = Matrix.CreateScaleMatrix(this.#sX, this.#sY);
-    const rMatrix = Matrix.CreateRotationMatrix(this.#r);
+    const rMatrix = Matrix.CreateRotationMatrix((this.#r / 360.0) * (Math.PI * 2));
 
     this.#localToWorldMatrix = Matrix.Multiply(Matrix.Multiply(sMatrix, rMatrix), tMatrix);
 
